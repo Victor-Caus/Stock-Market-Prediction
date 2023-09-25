@@ -3,10 +3,11 @@
 P = []; %sera uma matriz onde P(1,:) é da PETR, P(2,:) é da VALE, P(3,:) é da EMBR. 
 T = []; % Tambem uma matriz seguindo a mesma ordem
 
+% OBS: A arquitetura dessa rede foi criada pelo grupo
 % 2.Construção das Redes de arquitetura MLP, seguindo a ordem convencionada
 nets = cell(1, 3); % vetor contendo as respectivas redes neurais
 for i = 1:3
-    nets(i) = feedforwardnet({10,10}); % 2 camadas internas
+    nets(i) = feedforwardnet({20,25}); % 2 camadas internas
     nets(i) = configure(nets(i),P(i),T(i));
 end
 
@@ -32,11 +33,11 @@ end
 for i = 1:3
     nets(i).trainParam.showWindow = true;   % Exibe a interface de usuário (GUI)
     % Arquitetura da rede e funções de ativação de cada camada:
-    nets(i).layers{1}.dimensions = 10;
+    nets(i).layers{1}.dimensions = 20;
     nets(i).layers{1}.transferFcn = 'relu';
-    nets(i).layers{2}.dimensions = 10;
-    nets(i).layers{2}.transferFcn = 'relu';
-    nets(i).layers{3}.transferFc = 'purelin';  % Output como puramente linear
+    nets(i).layers{1}.dimensions = 25;
+    nets(i).layers{1}.transferFcn = 'relu';
+    nets(i).layers{2}.transferFc = 'purelin';  % Output como puramente linear
     nets(i).performFcn = 'mse';         % Usamos somas quadráticas 
     nets(i).trainFcn = 'trainlm';       % Algoritmo de otimização usado
 

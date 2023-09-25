@@ -6,7 +6,7 @@ T = []; % Tambem uma matriz seguindo a mesma ordem
 % 2.Construção das Redes de arquitetura MLP, seguindo a ordem convencionada
 nets = cell(1, 3); % vetor contendo as respectivas redes neurais
 for i = 1:3
-    nets(i) = feedforwardnet({10,10}); % 2 camadas internas
+    nets(i) = feedforwardnet({25,25}); % 2 camadas internas
     nets(i) = configure(nets(i),P(i),T(i));
 end
 
@@ -32,13 +32,13 @@ end
 for i = 1:3
     nets(i).trainParam.showWindow = true;   % Exibe a interface de usuário (GUI)
     % Arquitetura da rede e funções de ativação de cada camada:
-    nets(i).layers{1}.dimensions = 10;
-    nets(i).layers{1}.transferFcn = 'relu';
-    nets(i).layers{2}.dimensions = 10;
-    nets(i).layers{2}.transferFcn = 'relu';
-    nets(i).layers{3}.transferFc = 'purelin';  % Output como puramente linear
+    nets(i).layers{1}.dimensions = 25;
+    nets(i).layers{1}.transferFcn = 'tansig';
+    nets(i).layers{1}.dimensions = 25;
+    nets(i).layers{1}.transferFcn = 'tansig';
+    nets(i).layers{2}.transferFc = 'purelin';  % Output como puramente linear
     nets(i).performFcn = 'mse';         % Usamos somas quadráticas 
-    nets(i).trainFcn = 'trainlm';       % Algoritmo de otimização usado
+    nets(i).trainFcn = 'trainbr';       % Algoritmo de otimização usado
 
     % Hiperparametros de treinamentos (Ajustar "na mão"):
     nets(i).trainParam.epochs = 10000;
