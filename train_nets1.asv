@@ -6,7 +6,7 @@ T = []; % Tambem uma matriz seguindo a mesma ordem
 % 2.Construção das Redes de arquitetura MLP, seguindo a ordem convencionada
 nets = cell(1, numNets); % vetor contendo as respectivas redes neurais
 for i = 1:3
-    nets(i) = feedforwardnet(15); % 1 camada internas
+    nets(i) = feedforwardnet({30,15,10}); % 3 camadas internas
     nets(i) = configure(nets(i),P(i),T(i));
 end
 
@@ -30,23 +30,5 @@ end
 
 % 4. Treinamento das redes
 for i = 1:3
-    nets(i).trainParam.showWindow = true;   % Exibe a interface de usuário (GUI)
-    % Arquitetura da rede e funções de ativação de cada camada:
-    nets(i).layers{1}.dimensions = 15;
-    nets(i).layers{1}.transferFcn = 'tansig';
-    nets(i).layers{2}.transferFc = 'purelin';  % Output como puramente linear
-    nets(i).performFcn = 'mse';         % Usamos somas quadráticas 
-    nets(i).trainFcn = 'trainlm';       % Algoritmo de otimização usado
-
-    % Hiperparametros de treinamentos (Ajustar "na mão"):
-    nets(i).trainParam.epochs = 10000;
-    nets(i).trainParam.time = 120;
-    nets(i).trainParam.lr = 0.2;
-    nets(i).trainParam.min_grad = 10^-8;
-    nets(i).trainParam.max_fail = 1000;
-
-    [net,tr] = train(net,P(i),T(i));
+    net.trainParam.showWindow = true;   %Ex
 end
-
-%5. Teste das redes neurais:
-% Ainda a fazer
