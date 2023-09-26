@@ -96,7 +96,10 @@ for j = 1 : nAmostras
     % "As saídas serão as entradas - Mateus 20:16":
     P_simu(:,j+1) = [T_simu{1}(:,j) ; T_simu{2}(:,j) ; T_simu{3}(:,j)];
 end
-
-
-
-
+for i = 1:3
+    for j = 1 : nAmostras
+        for k = 1 : 10
+            close_simu{i}(10*(j-1) + k) = T_simu{i}(k,j);
+        end
+    end
+end
