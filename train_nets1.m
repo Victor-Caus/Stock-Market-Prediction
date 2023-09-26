@@ -56,11 +56,10 @@ end
 % Teste:
 
 for i = 1:3
-    nets{i}.divideFcn = 'divideind';
-    nets{i}.divideParam.trainInd = 1:indiceInicialSim - 1;
-    % OBS: Usarei um artificio para passar um "intervalo de tamanho 0"
-    nets{i}.divideParam.valInd = 2:1; %não há validação
-    nets{i}.divideParam.testInd = 2:1; % não há nada dedicado a teste
+    nets{i}.divideFcn = 'dividerand';
+    nets{i}.divideParam.trainRatio = 1.00;
+    nets{i}.divideParam.valRatio = 0.00;
+    nets{i}.divideParam.testRatio = 0.00;
 end
 
 % 4. Treinamento das redes
@@ -77,7 +76,7 @@ for i = 1:3
     nets{i}.trainParam.epochs = 10000;
     nets{i}.trainParam.time = 120;
     nets{i}.trainParam.lr = 0.2;
-    nets{i}.trainParam.min_grad = 10^-11; % O ideal seria 10^-20
+    nets{i}.trainParam.min_grad = 10^-22; % O ideal seria 10^-20
     nets{i}.trainParam.max_fail = 1000;
 
     [nets{i},tr] = train(nets{i},Ptr,Ttr{i});
