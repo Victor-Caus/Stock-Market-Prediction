@@ -96,6 +96,13 @@ for j = 1 : nAmostras
     % "As saídas serão as entradas - Mateus 20:16":
     P_simu(:,j+1) = [T_simu{1}(:,j) ; T_simu{2}(:,j) ; T_simu{3}(:,j)];
 end
+
+
+% "Desenpacotar as saidas em um array continuo como o close{i}"
+close_simu = cell(1,3);
+for i = 1:3
+    close_simu{i} = close{i}; %inicializar com tamanho certo para otimizar
+end
 for i = 1:3
     for j = 1 : nAmostras
         for k = 1 : 10
