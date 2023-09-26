@@ -6,9 +6,9 @@ tablePETR = readtable('PETR3.xlsx');
 tableVALE = readtable('VALE3.xlsx');
 tableEMBR = readtable('EMBR3.xlsx');
 close = cell(1, 3);
-close{1} = tablePETR{:, 7};
-close{2} = tableVALE{:, 7};
-close{3} = tableEMBR{:, 7};
+close{1} = tablePETR{:, 8};
+close{2} = tableVALE{:, 8};
+close{3} = tableEMBR{:, 8};
 
 
 T = cell(1, 3); % sera uma celula de matrizes onde T{1} é da PETR, T{2} é da VALE, T{3} é da EMBR. 
