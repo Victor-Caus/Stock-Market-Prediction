@@ -26,7 +26,7 @@ for i = 1:nAmostras
 end
 
 %Variáveis importantes:
-nSimulacao = 90; % (referente aos ultimos 3 meses)
+nSimulacao = 9; % (referente aos ultimos 3 meses 90/10)
 indiceMaxTrein = nAmostras - nSimulacao;
 % Separando os que vao ser treinados do total:
 Ptr = P(:,1:indiceMaxTrein);
@@ -44,13 +44,17 @@ end
 
 % 3. Pré-processamento dos Dados
 % 3.1) Normalizar os padrões de Treinamento de entrada/saída entre 0 e 1:
+%{
 for i = 1:3
     for j = 1:size(P(i))
     nets{i}.inputs{j}.processParams{2}.ymin = 0;
     nets{i}.inputs{j}.processParams{2}.ymax = 1;
+
+    nets{i}.outputs{j}.processParams{2}.ymin = 0;
+    nets{i}.outputs{j}.processParams{2}.ymax = 1;
     end
 end
-
+%}
 % 3.2) Dividir os dados entre os conjuntos de Treino, Validação e Erro de
 % Teste:
 
@@ -73,13 +77,17 @@ for i = 1:3
 
     % Hiperparâmetros de treinamentos (Ajustar "na mão"):
     nets{i}.trainParam.epochs = 10000;
-    nets{i}.trainParam.time = 120;
-    nets{i}.trainParam.lr = 0.2;
-    nets{i}.trainParam.min_grad = 10^-22; % O ideal seria 10^-20
-    nets{i}.trainParam.max_fail = 1000;
+    nets{i}.trainParam.time = 240;
+    nets{i}.trainParam.lr = 0.001;
+    nets{i}.trainParam.min_grad = 10^-5; 
+    nets{i}.trainParam.max_fail = 100;
 
     [nets{i},tr] = train(nets{i},Ptr,Ttr{i});
 end
+
+% Salvar as redes:
+ save('trained_nets_1.mat', 'nets');
+
 
 %5. Simulacao das redes neurais:
 % Vamos preencher o P e o T simulando aos poucos:
@@ -106,3 +114,40 @@ for i = 1:3
         end
     end
 end
+
+% Plotar gráficos comparativos de cada ação
+xInicio = 1:((nAmostras - nSimulacao)*10); 
+xFinal = ((nAmostras - nSimulacao)*10)+1 : nAmostras*10;
+
+% Ações da Petrobras (1)
+figure(1)
+plot(xInicio,close{1}(xInicio)','b',xFinal,close{1}(xFinal)','r')
+xlabel('Dia')
+ylabel('Cotação da ação')
+title('Fechamento da ação PETR3') 
+grid
+hold on
+plot(xInicio,close_simu{1}(xInicio),':m', xFinal,close_simu{1}(xFinal),':m');
+hold off
+
+% Vale do rio doce (2)
+figure(2)
+plot(xInicio,close{2}(xInicio)','b',xFinal,close{2}(xFinal)','r')
+xlabel('Dia')
+ylabel('Cotação da ação')
+title('Fechamento da ação VALE3') 
+grid
+hold on
+plot(xInicio,close_simu{2}(xInicio),':m', xFinal,close_simu{2}(xFinal),':m');
+hold off
+
+% Embraer (3)
+figure(3)
+plot(xInicio,close{3}(xInicio)','b',xFinal,close{3}(xFinal)','r')
+xlabel('Dia')
+ylabel('Cotação da ação')
+title('Fechamento da ação EMBR3') 
+grid
+hold on
+plot(xInicio,close_simu{3}(xInicio),':m', xFinal,close_simu{3}(xFinal),':m');
+hold off

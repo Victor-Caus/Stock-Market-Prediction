@@ -26,7 +26,7 @@ for i = 1:nAmostras
 end
 
 %Variáveis importantes:
-nSimulacao = 90; % (referente aos ultimos 3 meses)
+nSimulacao = 9; % (referente aos ultimos 3 meses 90/10)
 indiceMaxTrein = nAmostras - nSimulacao;
 % Separando os que vao ser treinados do total:
 Ptr = P(:,1:indiceMaxTrein);
@@ -106,3 +106,49 @@ for i = 1:3
         end
     end
 end
+
+% Plotar gráficos comparativos de cada ação
+xInicio = 1:((nAmostras - nSimulacao)*10); 
+xFinal = ((nAmostras - nSimulacao)*10)+1 : nAmostras*10;
+
+% Ações da Petrobras (1)
+figure(1)
+y1Inicio = close{1}(xInicio)';
+y1Final = close{1}(xFinal)';
+plot(xInicio,y1Inicio,'b',xFinal,y1Final,'r')
+xlabel('Dia')
+ylabel('Cotação da ação')
+title('Fechamento da ação PETR3') 
+grid
+hold on
+% plot(xSimulacao,yPrevisao{1},':m');
+plot(xFinal,yPrevisao{1},':m');
+hold off
+
+% Vale do rio doce
+figure(2)
+yValeInicio = vale(1:93*10)';
+yValeFinal = vale(93*10+1:99*10)';
+plot(xInicio,yValeInicio,'b',xFinal,yValeFinal,'r')
+xlabel('Dia')
+ylabel('Preço da ação')
+title('Fechamento da ação VALE3') 
+grid
+hold on
+% plot(xSimulacao,yPrevisao{2},':m');
+plot(xFinal,yPrevisao{2},':m');
+hold off
+
+% Embraer 
+figure(3)
+yEmbrInicio = embr(1:93*10)';
+yEmbrFinal = embr(93*10+1:99*10)';
+plot(xInicio,yEmbrInicio,'b',xFinal,yEmbrFinal,'r')
+xlabel('Dia')
+ylabel('Preço da ação')
+title('Fechamento da ação EMBR3') 
+grid
+hold on
+% plot(xSimulacao,yPrevisao{3},':m');
+plot(xFinal,yPrevisao{3},':m');
+hold off
