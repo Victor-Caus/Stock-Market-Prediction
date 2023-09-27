@@ -43,6 +43,38 @@ else
     return;
 end
 
+% Plotagem correta do treinamento:
+X_train = P;
+y_pred = reshape(sim(nets{2}, X_train), [], 1);
+y_train = T{2};
+y_train = reshape(y_train, [], 1);
+
+%{
+figure(1)
+plot(y_train);
+hold on;
+plot(y_pred);
+xlabel('Dia');
+ylabel('CotaÃ§Ã£o da aÃ§Ã£o');
+title('Fechamento da aÃ§Ã£o PETR3') ;
+legend('target','prediction');
+%}
+
+figure
+y_pred_test = T_simu{2}(xFinal);
+y_pred_test = reshape(y_pred_test, [], 1);
+y_test = close{2}(xFinal)';
+
+figure(1)
+plot(y_test);
+hold on;
+plot(y_pred_test);
+xlabel('Dia')
+ylabel('CotaÃ§Ã£o da aÃ§Ã£o')
+title('Fechamento da aÃ§Ã£o PETR3') 
+legend('target','prediction')
+
+%{
 % Plotar graficos de treinamento:
 % Vamos preencher o P e o T simulando aos poucos:
 close_trained = close;
@@ -155,3 +187,6 @@ grid
 hold on
 plot(xInicio,close_simu{3}(xInicio),':m', xFinal,close_simu{3}(xFinal),':m');
 hold off
+%}
+
+
