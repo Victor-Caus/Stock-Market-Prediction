@@ -1,3 +1,40 @@
+% 1. Coleta de dados:
+% Aqui deverá ser coletado os dados de entrada e saída do Excell
+
+tablePETR = readtable('PETR3.xlsx');
+tableVALE = readtable('VALE3.xlsx');
+tableEMBR = readtable('EMBR3.xlsx');
+close = cell(1, 3);
+close{1} = tablePETR{:, 8};
+close{2} = tableVALE{:, 8};
+close{3} = tableEMBR{:, 8};
+
+T = cell(1, 3); % sera uma celula de matrizes onde T{1} é da PETR, T{2} é da VALE, T{3} é da EMBR. 
+nAmostras = floor(size(close{1},1)/10) - 1;
+P = zeros(30, nAmostras); % padrões de entrada
+
+% organizando as amostras
+for i = 1:nAmostras
+    % pegar os fechamentos "atrasados" das três:
+    P(:,i) = [close{1}(10*i - 9 : 10*i) ; close{2}(10*i - 9 : 10*i) ; close{3}(10*i - 9 : 10*i)];
+    
+    % para cada uma, pegar a saída como sendo os fechamentos adiantados:
+    for j = 1:3
+        T{j}(:,i) = [close{j}(10*(i+1) - 9 : 10*(i+1))];
+    end
+end
+
+%Variáveis importantes:
+nSimulacao = 9; % (referente aos ultimos 3 meses 90/10)
+indiceMaxTrein = nAmostras - nSimulacao;
+% Separando os que vao ser treinados do total:
+Ptr = P(:,1:indiceMaxTrein);
+Ttr = cell(1, 3);
+for i = 1:3
+    Ttr{i} = T{i}(:,1:indiceMaxTrein);
+end
+
+
 % Carregar redes ja treinadas:
 if exist('trained_nets_1.mat', 'file') == 2
     load('trained_nets_1.mat')
@@ -5,6 +42,56 @@ else
     fprintf("Nenhuma rede salva.");
     return;
 end
+
+% Plotar graficos de treinamento:
+% Vamos preencher o P e o T simulando aos poucos:
+close_trained = close;
+for i = 1:3
+    T_trained = sim(nets{i},Ptr);
+
+    % "Desenpacotar as saidas em um array continuo como o close{i}"
+    for j = 1 : nAmostras
+        for k = 1 : 10
+            close_trained{i}(10*(j-1) + k) = T_simu{i}(k,j);
+        end
+    end
+end
+%Grafico treino petrobras:
+xInicio = 1:((nAmostras - nSimulacao)*10); 
+figure(4)
+plot(xInicio,close{1}(xInicio)','b')
+xlabel('Dia')
+ylabel('Cotacao da acao')
+title('Fechamento da acao PETR3') 
+grid
+hold on
+plot(xInicio,close_trained{1}(xInicio),':m');
+hold off
+
+%Grafico treino VALE:
+figure(5)
+plot(xInicio,close{2}(xInicio)','b')
+xlabel('Dia')
+ylabel('Cotacao da Acao')
+title('Fechamento da acao VALE3') 
+grid
+hold on
+plot(xInicio,close_trained{2}(xInicio),':m');
+hold off
+
+%Grafico treino EMBRAER:
+xInicio = 1:((nAmostras - nSimulacao)*10); 
+figure(6)
+plot(xInicio,close{3}(xInicio)','b')
+xlabel('Dia')
+ylabel('Cotacao da acao')
+title('Fechamento da acao EMBR3') 
+grid
+hold on
+plot(xInicio,close_trained{3}(xInicio),':m');
+hold off
+
+
 
 %5. Simulacao das redes neurais:
 % Vamos preencher o P e o T simulando aos poucos:

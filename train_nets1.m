@@ -9,7 +9,6 @@ close{1} = tablePETR{:, 8};
 close{2} = tableVALE{:, 8};
 close{3} = tableEMBR{:, 8};
 
-
 T = cell(1, 3); % sera uma celula de matrizes onde T{1} é da PETR, T{2} é da VALE, T{3} é da EMBR. 
 nAmostras = floor(size(close{1},1)/10) - 1;
 P = zeros(30, nAmostras); % padrões de entrada
@@ -42,23 +41,12 @@ for i = 1:3
     nets{i} = configure(nets{i},Ptr,Ttr{i});
 end
 
+
 % 3. Pré-processamento dos Dados
-% 3.1) Normalizar os padrões de Treinamento de entrada/saída entre 0 e 1:
-%{
 for i = 1:3
-    for j = 1:size(P(i))
-    nets{i}.inputs{j}.processParams{2}.ymin = 0;
-    nets{i}.inputs{j}.processParams{2}.ymax = 1;
-
-    nets{i}.outputs{j}.processParams{2}.ymin = 0;
-    nets{i}.outputs{j}.processParams{2}.ymax = 1;
-    end
-end
-%}
-% 3.2) Dividir os dados entre os conjuntos de Treino, Validação e Erro de
-% Teste:
-
-for i = 1:3
+    % 3.1) Regularização dos dados:
+    nets{i}.performParam.regularization = 0;
+    % 3.1) Dividir os dados, deixando tudo para treino:
     nets{i}.divideFcn = 'dividerand';
     nets{i}.divideParam.trainRatio = 1.00;
     nets{i}.divideParam.valRatio = 0.00;
@@ -77,8 +65,8 @@ for i = 1:3
 
     % Hiperparâmetros de treinamentos (Ajustar "na mão"):
     nets{i}.trainParam.epochs = 10000;
-    nets{i}.trainParam.time = 240;
-    nets{i}.trainParam.lr = 0.001;
+    nets{i}.trainParam.time = 120;
+    nets{i}.trainParam.mu = 0.2;
     nets{i}.trainParam.min_grad = 10^-5; 
     nets{i}.trainParam.max_fail = 100;
 
@@ -86,8 +74,55 @@ for i = 1:3
 end
 
 % Salvar as redes:
- save('trained_nets_1.mat', 'nets');
+save('trained_nets_1.mat', 'nets');
 
+% Plotar graficos de treinamento:
+% Vamos preencher o P e o T simulando aos poucos:
+close_trained = close;
+for i = 1:3
+    T_trained = sim(nets{i},Ptr);
+
+    % "Desenpacotar as saidas em um array continuo como o close{i}"
+    for j = 1 : nAmostras
+        for k = 1 : 10
+            close_trained{i}(10*(j-1) + k) = T_simu{i}(k,j);
+        end
+    end
+end
+%Grafico treino petrobras:
+xInicio = 1:((nAmostras - nSimulacao)*10); 
+figure(4)
+plot(xInicio,close{1}(xInicio)','b')
+xlabel('Dia')
+ylabel('Cotacao da acao')
+title('Fechamento da acao PETR3') 
+grid
+hold on
+plot(xInicio,close_trained{1}(xInicio),':m');
+hold off
+
+%Grafico treino VALE:
+figure(5)
+plot(xInicio,close{2}(xInicio)','b')
+xlabel('Dia')
+ylabel('Cotacao da Acao')
+title('Fechamento da acao VALE3') 
+grid
+hold on
+plot(xInicio,close_trained{2}(xInicio),':m');
+hold off
+
+%Grafico treino EMBRAER:
+xInicio = 1:((nAmostras - nSimulacao)*10); 
+figure(6)
+plot(xInicio,close{3}(xInicio)','b')
+xlabel('Dia')
+ylabel('Cotacao da acao')
+title('Fechamento da acao EMBR3') 
+grid
+hold on
+plot(xInicio,close_trained{3}(xInicio),':m');
+hold off
 
 %5. Simulacao das redes neurais:
 % Vamos preencher o P e o T simulando aos poucos:
@@ -130,6 +165,7 @@ hold on
 plot(xInicio,close_simu{1}(xInicio),':m', xFinal,close_simu{1}(xFinal),':m');
 hold off
 
+%{
 % Vale do rio doce (2)
 figure(2)
 plot(xInicio,close{2}(xInicio)','b',xFinal,close{2}(xFinal)','r')
@@ -151,3 +187,6 @@ grid
 hold on
 plot(xInicio,close_simu{3}(xInicio),':m', xFinal,close_simu{3}(xFinal),':m');
 hold off
+%}
+
+% Simulação 2: Só os ultimos
