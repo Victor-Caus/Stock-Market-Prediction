@@ -37,7 +37,7 @@ end
 % 2.Construção das Redes de arquitetura MLP, seguindo a ordem convencionada
 nets = cell(1, 3); % vetor contendo as respectivas redes neurais
 for i = 1:3
-    nets{i} = feedforwardnet(15); % 1 camada internas
+    nets{i} = feedforwardnet(15,'trainlm'); % 1 camada internas
     nets{i} = configure(nets{i},Ptr,Ttr{i});
 end
 
@@ -95,7 +95,7 @@ figure(4)
 plot(xInicio,close{1}(xInicio)','b')
 xlabel('Dia')
 ylabel('Cotacao da acao')
-title('Fechamento da acao PETR3') 
+title('Treinamento PETR3') 
 grid
 hold on
 plot(xInicio,close_trained{1}(xInicio),':m');
@@ -106,7 +106,7 @@ figure(5)
 plot(xInicio,close{2}(xInicio)','b')
 xlabel('Dia')
 ylabel('Cotacao da Acao')
-title('Fechamento da acao VALE3') 
+title('Treinamento VALE3') 
 grid
 hold on
 plot(xInicio,close_trained{2}(xInicio),':m');
@@ -118,7 +118,7 @@ figure(6)
 plot(xInicio,close{3}(xInicio)','b')
 xlabel('Dia')
 ylabel('Cotacao da acao')
-title('Fechamento da acao EMBR3') 
+title('Treinamento EMBR3') 
 grid
 hold on
 plot(xInicio,close_trained{3}(xInicio),':m');
