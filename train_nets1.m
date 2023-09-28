@@ -82,7 +82,7 @@ for i = 1:3
     % Arquitetura da rede e funções de ativação de cada camada:
     nets{i}.layers{1}.dimensions = 15;
     nets{i}.layers{1}.transferFcn = 'tansig';
-    nets{i}.layers{2}.transferFcn = 'purelin';  % Output como puramente linear
+    nets{i}.layers{end}.transferFcn = 'purelin';  % Output como puramente linear
     nets{i}.performFcn = 'mse';         % Usamos somas quadráticas 
     nets{i}.trainFcn = 'trainlm';       % Algoritmo de otimização usado
 
