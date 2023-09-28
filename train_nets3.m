@@ -90,7 +90,7 @@ for i = 1:3
     nets{i}.trainFcn = 'trainrp';       % Algoritmo de otimização usado
 
     % Hiperparâmetros de treinamentos (Ajustar "na mão"):
-    nets{i}.trainParam.epochs = 150;
+    nets{i}.trainParam.epochs = 10000;
     nets{i}.trainParam.time = 120;
     nets{i}.trainParam.mu = 0.01;
     nets{i}.trainParam.min_grad = 10^-5; 
