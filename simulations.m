@@ -60,19 +60,8 @@ title('Fechamento da aÃ§Ã£o PETR3') ;
 legend('target','prediction');
 %}
 
-figure
-y_pred_test = T_simu{2}(xFinal);
-y_pred_test = reshape(y_pred_test, [], 1);
-y_test = close{2}(xFinal)';
 
-figure(1)
-plot(y_test);
-hold on;
-plot(y_pred_test);
-xlabel('Dia')
-ylabel('CotaÃ§Ã£o da aÃ§Ã£o')
-title('Fechamento da aÃ§Ã£o PETR3') 
-legend('target','prediction')
+
 
 %{
 % Plotar graficos de treinamento:
@@ -123,14 +112,14 @@ hold on
 plot(xInicio,close_trained{3}(xInicio),':m');
 hold off
 
-
+%}
 
 %5. Simulacao das redes neurais:
 % Vamos preencher o P e o T simulando aos poucos:
 P_simu = P; 
 T_simu = T;
 
-for j = 1 : nAmostras
+for j = nAmostras - nSimulacao -1 : nAmostras
     for i = 1:3
         T_simu{i}(:,j) = sim(nets{i}, P_simu(:,j));
     end
@@ -156,15 +145,19 @@ xInicio = 1:((nAmostras - nSimulacao)*10);
 xFinal = ((nAmostras - nSimulacao)*10)+1 : nAmostras*10;
 
 % Ações da Petrobras (1)
+y_pred_test = T_simu{2}(xFinal);
+y_pred_test = reshape(y_pred_test, [], 1);
+y_test = close{2}(xFinal)';
+
 figure(1)
-plot(xInicio,close{1}(xInicio)','b',xFinal,close{1}(xFinal)','r')
+plot(y_test);
+hold on;
+plot(y_pred_test);
 xlabel('Dia')
-ylabel('Cotação da ação')
-title('Fechamento da ação PETR3') 
-grid
-hold on
-plot(xInicio,close_simu{1}(xInicio),':m', xFinal,close_simu{1}(xFinal),':m');
-hold off
+ylabel('CotaÃ§Ã£o da aÃ§Ã£o')
+title('Fechamento da aÃ§Ã£o PETR3') 
+legend('target','prediction')
+
 
 % Vale do rio doce (2)
 figure(2)
